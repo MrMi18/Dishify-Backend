@@ -2,7 +2,9 @@ import express from "express";
 import cors from "cors";
 import proxyRouter from "./Routers/proxy.js";
 import { connectDb } from "./config/Database.js";
+import cookieParser from "cookie-parser";
 import authRouter from "./Routers/user.js";
+import profileRouter from "./Routers/profile.js";
 
 const app = express();
 const PORT = 5000;
@@ -11,7 +13,9 @@ app.use(cors()); // Allow all origins
 app.use(cookieParser());  // Parses cookies
 app.use(express.json());  // Parses JSON bodies.
 app.use("/",proxyRouter);
-app.use("/",authRouter)
+app.use("/",authRouter);
+app.use("/", profileRouter);
+
 
 
 

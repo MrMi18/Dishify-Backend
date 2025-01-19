@@ -1,20 +1,28 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import signupValidation from '../Helper/signupValidation';
-import DishifyUser from '../dishifyUser/user';
 import bcrypt from 'bcrypt';
-import { userAuth } from '../middleware/utils';
-import passwordValidation from '../Helper/passwordValidatin';
+import DishifyUser from '../models/dishifyUser.js';
+// import userAuth from '../middleware/userAuth.js';
+import validator from 'validator';
+import userValidations from '../helper/userValidations.js';
 
 
 const authRouter = express.Router();
 authRouter.post('/signup', async (req,res)=>{
 
     const{Name,password,emailId,phoneNumber} = req.body;
-
+    
     try{
-    signupValidation(req);
+       
+        const alreadyExist = await DishifyUser.findOne({emailId:emailId});
+        if(alreadyExist){
+            return res.send("User already exist with this email");
+        }
+        userValidations(req);
+    
+
     const passwordHash = await bcrypt.hash(password,10);
+  
     
         
     const user = new DishifyUser({
@@ -22,16 +30,15 @@ authRouter.post('/signup', async (req,res)=>{
     });
     
         await user.save();
-        
         const token = await jwt.sign({_id:user._id},"Shane@123#",{expiresIn:'7d'});
-
 
             res.cookie("token",token)
 
             res.json({data:user});
+            
     }
     catch(err){
-        console.log(err);
+        
         res.status(400).json({data:err.message});
 
     }
@@ -75,28 +82,31 @@ authRouter.post('/logout',(req,res)=>{
 
 })
 
-authRouter.patch('/user/edit/password/:userId', userAuth, async(req,res) =>{
-    try{
-    const user = req.user;
-    const{ oldPassword ,newPassword} = req.body;
+// authRouter.patch('/user/edit/password/:userId', userAuth, async(req,res) =>{
+//     try{
+//     const user = req.user;
+//     const{ oldPassword ,newPassword} = req.body;
     
     
-    const isPasswordValid = await bcrypt.compare(oldPassword,user.password);
-    if(!isPasswordValid){
-        throw new Error("Invalid Password Old Password");
-    }
+//     const isPasswordValid = await bcrypt.compare(oldPassword,user.password);
+//     if(!isPasswordValid){
+//         throw new Error("Invalid Password Old Password");
+//     }
     
-    passwordValidation(newPassword);
+//     // signupValidation(newPassword);
+//     if(!validator.isStrongPassword(newPassword)){
+//             throw new Error ("Password must be Strong");
+//         }
     
-    const newPasswordHash = await bcrypt.hash(newPassword,10);
+//     const newPasswordHash = await bcrypt.hash(newPassword,10);
     
-    await DishifyUser.findByIdAndUpdate(user._id,{password:newPasswordHash});
-    res.send("Password Change sucessfully");
-    }catch(err){
-        res.status(400).send("Error: "+ err.message);
-    }
+//     await DishifyUser.findByIdAndUpdate(user._id,{password:newPasswordHash});
+//     res.send("Password Change sucessfully");
+//     }catch(err){
+//         res.status(400).send("Error: "+ err.message);
+//     }
 
-})
+// })
 
     
 export default authRouter;
