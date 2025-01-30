@@ -19,7 +19,7 @@ proxyRouter.get("/api/restaurants", async (req, res) => {
         },
       });
   
-      console.log("Swiggy API Response Status:", response.status);
+      // console.log("Swiggy API Response Status:", response.status);
   
       if (!response.ok) {
         throw new Error(`Failed to fetch: ${response.status}`);
@@ -28,7 +28,7 @@ proxyRouter.get("/api/restaurants", async (req, res) => {
       const data = await response.json();
       res.json(data);
     } catch (error) {
-      console.error("Error fetching data from Swiggy API:", error.message);
+      // console.error("Error fetching data from Swiggy API:", error.message);
       res.status(500).json({ error: "Error fetching data from Swiggy API" });
     }
   });
@@ -58,7 +58,7 @@ proxyRouter.get("/api/restaurants", async (req, res) => {
       const data = await response.json();
       res.json(data);
     } catch (error) {
-      console.error("Error fetching menu from Swiggy API:", error.message);
+      // console.error("Error fetching menu from Swiggy API:", error.message);
       res.status(500).json({ error: "Error fetching menu from Swiggy API" });
     }
   });

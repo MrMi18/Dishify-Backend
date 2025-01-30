@@ -9,7 +9,8 @@ import profileRouter from "./Routers/profile.js";
 const app = express();
 const PORT = 5000;
 
-app.use(cors( {origin:"https://dishify-by-mrmi.netlify.app/",
+app.use(cors( {origin:"https://dishify-by-mrmi.netlify.app",
+    methods:["GET","POST"],
     credentials:true,}
 )); // Allow all origins
 app.use(cookieParser());  // Parses cookies
