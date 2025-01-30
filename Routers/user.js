@@ -16,7 +16,7 @@ authRouter.post('/signup', async (req,res)=>{
        
         const alreadyExist = await DishifyUser.findOne({emailId:emailId});
         if(alreadyExist){
-            return res.send("User already exist with this email");
+            return res.status(409).send("User already exist with this email");
         }
         userValidations(req);
     

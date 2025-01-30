@@ -10,14 +10,24 @@ const dishifyUserSchema = new mongoose.Schema({
         type:String,
         required: true,
         minLength:3,
-        maxLength:10,
+        maxLength:15,
+    },
+    address:{
+        type:String,
+        minLength:10,
+        maxLength:50,
     },
     phoneNumber:{
-        
-        type:Number,
-        required: true,
+        unique: true,
+        sparse: true,
+        type:Number,  
         minLength:10,
         maxLength:10,
+        validate(value){
+            if(!validator.isMobilePhone(phoneNumber)){
+                throw new Error("Invalid Phone Number");
+            }
+        }
     },
     
     gender:{

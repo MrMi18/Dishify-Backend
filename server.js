@@ -9,7 +9,9 @@ import profileRouter from "./Routers/profile.js";
 const app = express();
 const PORT = 5000;
 
-app.use(cors()); // Allow all origins
+app.use(cors( {origin:"http://localhost:1234",
+    credentials:true,}
+)); // Allow all origins
 app.use(cookieParser());  // Parses cookies
 app.use(express.json());  // Parses JSON bodies.
 app.use("/",proxyRouter);
